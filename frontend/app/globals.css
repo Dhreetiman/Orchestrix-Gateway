@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────
+ * macOS-inspired design tokens
+ *
+ * Light is modeled on Big Sur / Sonoma chrome — warm grays, deep
+ * accent blue, hairline borders, soft layered shadows. Dark mirrors
+ * Sonoma's dark mode: bluish near-black surfaces, subtle elevation.
+ * ─────────────────────────────────────────────────────────────*/
+@layer base {
+  :root {
+    --radius: 0.85rem;
+
+    /* Surface stack */
+    --background: 220 25% 97%;
+    --foreground: 220 14% 11%;
+    --surface: 0 0% 100%;
+    --surface-subtle: 220 25% 95%;
+    --surface-elevated: 0 0% 100%;
+    --muted: 220 16% 92%;
+    --muted-foreground: 220 9% 42%;
+
+    /* Sidebar (translucent vibrancy in dark; warm pearl in light) */
+    --sidebar: 220 30% 96%;
+    --sidebar-foreground: 220 14% 18%;
+    --sidebar-accent: 213 96% 53%;
+
+    /* Accent (macOS systemBlue) */
+    --primary: 213 96% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 18% 90%;
+    --secondary-foreground: 220 14% 16%;
+    --accent: 213 96% 96%;
+    --accent-foreground: 213 96% 30%;
+    --destructive: 0 84% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Inputs, rings, borders */
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 213 96% 53%;
+
+    /* Shadows — split into a hairline rim + soft drop */
+    --shadow-rim: 220 14% 88%;
+    --shadow-soft: 220 30% 35% / 0.12;
+
+    /* Chart palette — muted, harmonious */
+    --chart-1: 213 90% 55%; /* blue */
+    --chart-2: 152 60% 45%; /* green */
+    --chart-3: 35 95% 58%;  /* orange */
+    --chart-4: 280 55% 60%; /* purple */
+    --chart-5: 0 70% 60%;   /* red */
+
+    /* Traffic light dots */
+    --traffic-close: 4 90% 58%;
+    --traffic-minimize: 41 92% 56%;
+    --traffic-maximize: 142 60% 47%;
+  }
+
+  .dark {
+    --background: 220 18% 8%;
+    --foreground: 220 12% 92%;
+    --surface: 220 18% 12%;
+    --surface-subtle: 220 18% 10%;
+    --surface-elevated: 220 18% 14%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 9% 65%;
+
+    --sidebar: 220 18% 10%;
+    --sidebar-foreground: 220 12% 88%;
+    --sidebar-accent: 213 96% 60%;
+
+    --primary: 213 96% 60%;
+    --primary-foreground: 220 18% 8%;
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 220 12% 92%;
+    --accent: 213 60% 22%;
+    --accent-foreground: 213 96% 85%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 220 18% 8%;
+
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 213 96% 60%;
+
+    --shadow-rim: 220 15% 22%;
+    --shadow-soft: 220 80% 4% / 0.5;
+
+    --chart-1: 213 96% 65%;
+    --chart-2: 152 60% 55%;
+    --chart-3: 35 95% 60%;
+    --chart-4: 280 60% 70%;
+    --chart-5: 0 75% 65%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(at 0% 0%, hsl(var(--primary) / 0.06) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsl(var(--chart-4) / 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * Reusable macOS-feel utilities
+ * ─────────────────────────────────────────────────────────────*/
+@layer components {
+  .vibrancy {
+    @apply bg-surface/70 backdrop-blur-xl backdrop-saturate-150 border border-border/60;
+  }
+
+  .vibrancy-strong {
+    @apply bg-surface/85 backdrop-blur-2xl backdrop-saturate-150 border border-border/60;
+  }
+
+  .card-rim {
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--surface-elevated) / 0.9),
+      0 1px 0 0 hsl(var(--shadow-rim)),
+      0 8px 24px -8px hsl(var(--shadow-soft));
+  }
+
+  .traffic-light {
+    @apply h-3 w-3 rounded-full ring-1 ring-inset ring-black/10;
+  }
+}
+
+/* Recharts axis & legend text inherits foreground so it adapts to dark mode. */
+.recharts-text {
+  fill: hsl(var(--muted-foreground));
+}
+.recharts-cartesian-grid line {
+  stroke: hsl(var(--border));
+}

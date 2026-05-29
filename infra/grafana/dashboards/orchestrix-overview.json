@@ -1,0 +1,146 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "graphTooltip": 0,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Requests / sec",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(orchestrix_requests_total[1m]))"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "reqps", "decimals": 2}}
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "p95 Latency",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(orchestrix_request_latency_seconds_bucket[5m])))"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "s", "decimals": 2}}
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Cache Hit Ratio",
+      "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(orchestrix_requests_total{cache_hit=\"true\"}[5m])) / clamp_min(sum(rate(orchestrix_requests_total[5m])), 1)"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 2}}
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Active Streams",
+      "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "orchestrix_active_streams"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Requests by Provider",
+      "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (provider) (rate(orchestrix_requests_total[1m]))",
+          "legendFormat": "{{provider}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Latency by Provider (p95)",
+      "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, provider) (rate(orchestrix_request_latency_seconds_bucket[5m])))",
+          "legendFormat": "{{provider}}"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Tokens / sec",
+      "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (direction) (rate(orchestrix_tokens_total[1m]))",
+          "legendFormat": "{{direction}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Cost (USD / sec)",
+      "gridPos": {"x": 12, "y": 12, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (model) (rate(orchestrix_cost_usd_total[5m]))",
+          "legendFormat": "{{model}}"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyUSD"}}
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Provider Errors",
+      "gridPos": {"x": 0, "y": 20, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (provider, error_code) (rate(orchestrix_provider_errors_total[5m]))",
+          "legendFormat": "{{provider}} / {{error_code}}"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Rate-Limit Rejections",
+      "gridPos": {"x": 12, "y": 20, "w": 12, "h": 8},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(orchestrix_rate_limit_rejections_total[5m]))"
+        }
+      ]
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 38,
+  "tags": ["orchestrix"],
+  "templating": {"list": []},
+  "time": {"from": "now-30m", "to": "now"},
+  "timezone": "",
+  "title": "Orchestrix Gateway — Overview",
+  "uid": "orchestrix-overview",
+  "version": 1
+}
